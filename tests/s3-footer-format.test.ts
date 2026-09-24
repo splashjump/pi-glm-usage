@@ -63,11 +63,11 @@ test("footer: color roles by threshold (<50 success, [50,80) warning, >=80 error
 	assert.ok(r.includes("error(████████)"));
 });
 
-test("formatReset: relative under 24h, date+time within 7d, short date beyond", () => {
+test("formatReset: relative under 24h, numeric date+time within 7d, numeric date beyond", () => {
 	assert.equal(formatReset(NOW + 100 * 60 * 1000, NOW), "1h 40m");
 	assert.equal(formatReset(NOW + 5 * 60 * 1000, NOW), "5m");
-	assert.match(formatReset(NOW + 2 * 24 * HOUR + HOUR, NOW), /^[A-Z][a-z]{2}\d{1,2} \d{2}:\d{2}$/);
-	assert.match(formatReset(NOW + 12 * 24 * HOUR, NOW), /^[A-Z][a-z]{2}\d{1,2}$/);
+	assert.match(formatReset(NOW + 2 * 24 * HOUR + HOUR, NOW), /^\d{1,2}\.\d{1,2} \d{2}:\d{2}$/);
+	assert.match(formatReset(NOW + 12 * 24 * HOUR, NOW), /^\d{1,2}\.\d{1,2}$/);
 });
 
 test("formatReset: past or invalid → empty string", () => {
