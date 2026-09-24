@@ -81,6 +81,10 @@ test("timeout aborts → fixed error string", async () => {
 	const slow = ((url: string | URL, init?: RequestInit) =>
 		new Promise<Response>((_resolve, reject) => {
 			init?.signal?.addEventListener("abort", () => reject(new DOMException("aborted", "TimeoutError")));
+			// AbortSignal.timeout uses an unref'ed timer: without a ref'ed fallback
+			// the event loop can drain before 20ms elapse and this promise never
+			// settles (flaky on Windows). Always settle via a real timer.
+			setTimeout(() => reject(new DOMException("aborted", "TimeoutError")), 500);
 		})) as unknown as typeof fetch;
 	const client = createQuotaClient(CN, { fetchImpl: slow, timeoutMs: 20 });
 	const res = await client.fetchQuota("k");

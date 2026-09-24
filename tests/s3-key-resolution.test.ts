@@ -1,3 +1,4 @@
+import nodePath from "node:path";
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { makeKeyDeps } from "./helpers.ts";
@@ -55,5 +56,5 @@ test("providers read distinct env vars and auth.json keys", () => {
 
 test("piAgentDir honors PI_CODING_AGENT_DIR override", () => {
 	assert.equal(piAgentDir({ PI_CODING_AGENT_DIR: "/custom" }, "/home/u"), "/custom");
-	assert.equal(piAgentDir({}, "/home/u"), "/home/u/.pi/agent");
+	assert.equal(piAgentDir({}, "/home/u"), nodePath.join("/home/u", ".pi", "agent"));
 });
