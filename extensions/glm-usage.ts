@@ -601,10 +601,20 @@ export function renderFooter(
 		return reset ? `${colored} ↻ ${reset}` : colored;
 	});
 	const footer = segs.join(" · ");
+	// Weekly-reset days gauge: a coarse dim "Nd" at the end of the footer so the
+	// weekly horizon is visible at a glance (exact times live in /glm-usage).
+	// Ceil so the final <24h still reads 1d; omitted when the plan has no
+	// weekly quota or its reset time is missing/past.
+	const theme = opts.theme;
+	const weekly = snapshot.limits.find((l) => l.unit === 6);
+	let daysBadge = "";
+	if (weekly && typeof weekly.nextResetTime === "number" && weekly.nextResetTime > opts.now) {
+		const days = Math.ceil((weekly.nextResetTime - opts.now) / (24 * HOUR_MS));
+		daysBadge = ` ${theme ? theme.fg("dim", `${days}d`) : `${days}d`}`;
+	}
 	// Quota-exhaustion estimate for the 5h window: only when the rate says
 	// exhaustion beats the reset (otherwise the ↻ countdown already tells the
 	// truth and a second suffix would be noise).
-	const theme = opts.theme;
 	const limit5h = snapshot.limits.find((l) => l.unit === 3);
 	if (limit5h && opts.snaps5h && opts.snaps5h.length > 0) {
 		const rate = estimateQuotaRate(opts.snaps5h);
@@ -614,12 +624,12 @@ export function renderFooter(
 				const hours = minExhaustionHours(runway, opts.now, limit5h.nextResetTime);
 				if (hours < (limit5h.nextResetTime ? (limit5h.nextResetTime - opts.now) / HOUR_MS : Infinity)) {
 					const suffix = `≈${hours >= 24 ? `${(hours / 24).toFixed(1)}d` : hours >= 1 ? `${hours.toFixed(1)}h` : `${Math.round(hours * 60)}min`}`;
-					return `GLM ${footer} ${theme ? theme.fg("dim", suffix) : suffix}`;
+					return `GLM ${footer} ${theme ? theme.fg("dim", suffix) : suffix}${daysBadge}`;
 				}
 			}
 		}
 	}
-	return `GLM ${footer}`;
+	return `GLM ${footer}${daysBadge}`;
 }
 
 const shanghaiFormatter = new Intl.DateTimeFormat("en-CA", {

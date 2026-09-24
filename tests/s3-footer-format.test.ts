@@ -20,7 +20,7 @@ const markerTheme = { fg: (role: string, text: string) => `${role}(${text})` };
 
 test("footer: all units present → 5h then W, M omitted (two-segment cap)", () => {
 	const text = renderFooter(snap([[3, 34, NOW + 2 * HOUR], [6, 12, NOW + 48 * HOUR], [5, 1]]), { now: NOW, theme: identityTheme });
-	assert.equal(text, "GLM 5h ███░░░░░ 34% ↻ 2h 0m · W █░░░░░░░ 12%");
+	assert.equal(text, "GLM 5h ███░░░░░ 34% ↻ 2h 0m · W █░░░░░░░ 12% 2d");
 });
 
 test("footer: no weekly unit → MCP takes the second slot", () => {
@@ -31,7 +31,7 @@ test("footer: no weekly unit → MCP takes the second slot", () => {
 test("footer: reset suffix only on the nearest-resetting displayed segment", () => {
 	// W resets sooner than 5h here → ↻ lands on W
 	const text = renderFooter(snap([[3, 34, NOW + 6 * HOUR], [6, 12, NOW + 2 * HOUR]]), { now: NOW, theme: identityTheme });
-	assert.equal(text, "GLM 5h ███░░░░░ 34% · W █░░░░░░░ 12% ↻ 2h 0m");
+	assert.equal(text, "GLM 5h ███░░░░░ 34% · W █░░░░░░░ 12% ↻ 2h 0m 1d");
 });
 
 test("footer: missing reset times → no ↻ anywhere", () => {
