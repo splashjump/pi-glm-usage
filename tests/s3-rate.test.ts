@@ -70,7 +70,7 @@ test("footer appends ≈ suffix when the rate says quota exhausts before the res
 		{ level: "max", limits: [{ unit: 3, type: "TOKENS_LIMIT", percentage: 60, nextResetTime: now + 5 * H }] },
 		{ now, theme: id, snaps5h: snaps },
 	);
-	assert.match(out, /60% ↻5h 0m ≈2\.0h$/, `got: ${out}`);
+	assert.match(out, /60% ↻ 5h 0m ≈2.0h$/, `got: ${out}`);
 	// Reset sooner than exhaustion -> no suffix (the countdown is the truth).
 	const out2 = renderFooter(
 		{ level: "max", limits: [{ unit: 3, type: "TOKENS_LIMIT", percentage: 60, nextResetTime: now + 1 * H }] },

@@ -597,7 +597,10 @@ export function renderFooter(
 		const chunk = `${FOOTER_LABELS[p.unit]} ${renderBar(p.limit.percentage, opts.theme ?? identityTheme)} ${pctText}%${staleSuffix}`;
 		const colored = opts.theme ? opts.theme.fg(colorRoleFor(p.limit.percentage), chunk) : chunk;
 		const reset = nearest && nearest.unit === p.unit ? formatReset(p.limit.nextResetTime, opts.now) : "";
-		return reset ? `${colored} ↻${reset}` : colored;
+		// Trailing space: ↻ is East Asian Ambiguous width — CJK fonts draw it as 2
+		// cells while layout math assumes 1, so without a buffer it overlaps the
+		// countdown text (e.g. ↻1h). The space absorbs the extra drawn width.
+		return reset ? `${colored} ↻ ${reset}` : colored;
 	});
 	const footer = segs.join(" · ");
 	// Quota-exhaustion estimate for the 5h window: only when the rate says
