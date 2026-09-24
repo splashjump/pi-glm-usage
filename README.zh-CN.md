@@ -130,7 +130,22 @@ npm 上还有一个同名的 [`pi-glm-usage`](https://www.npmjs.com/package/pi-g
 
 若 `pi-glm-usage` 增加国内版支持，此表将更新或移除。
 
+## Fork 改动
+
+基于上游 `v0.1.5`（frederick-wang/pi-glm-usage）的增量修改，保持小提交便于回传上游：
+
+- **footer**：`↻` 后加缓冲空格。该字符属东亚「模糊宽度」，中文终端字体按 2 格渲染
+  而排版按 1 格计算，紧贴的倒计时文字（`↻1h`）会被压到。
+- **formatReset**：日期改为纯数字，替代英文月份简写 —— 7 天内 `9.26 13:45`，
+  超过 7 天 `10.6`；24 小时内仍是倒计时。
+- **footer**：行尾追加暗色 `Nd` 周限剩余天数牌（向上取整；无周限套餐不显示），
+  精确时刻仍在 `/glm-usage` 里看。
+- **tests**：修复两个对 Windows 不友好的测试 —— `piAgentDir` 断言硬编码 POSIX 路径
+  分隔符；timeout 测试的假 fetch 依赖 unref 的 `AbortSignal.timeout` 定时器，
+  事件循环可能提前排空导致 promise 永不 settle。Windows 上 105/105 全绿。
+
 ## 隐私
+
 
 不采集任何数据。API key 只在本地读取，仅用于请求套餐自身的监控端点
 （`open.bigmodel.cn` / `api.z.ai`）。提醒去重状态保存在本地 pi 会话文件中。

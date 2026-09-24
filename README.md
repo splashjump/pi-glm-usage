@@ -143,7 +143,26 @@ follow `PI_GLM_USAGE_LANG` (`zh` or `en`) when set; otherwise the process
 locale (a deliberately Chinese shell locale counts as intent); otherwise
 English. `--json` output keeps stable English keys for scripts.
 
+## Fork changes
+
+Changes on top of upstream `v0.1.5` (frederick-wang/pi-glm-usage), kept as
+small commits for easy upstreaming:
+
+- **footer**: buffer space after `↻`. The glyph is East Asian Ambiguous width;
+  CJK terminal fonts draw it as 2 cells while layout math assumes 1, so the
+  glued countdown (`↻1h`) overlapped.
+- **formatReset**: numeric dates instead of English month abbreviations —
+  `9.26 13:45` within 7 days, `10.6` beyond; under 24h stays a countdown.
+- **footer**: dim `Nd` days gauge for the weekly quota horizon at the end of
+  the line (ceil; omitted when the plan has no weekly quota). Exact times
+  remain in `/glm-usage`.
+- **tests**: fixed two Windows-hostile tests — hardcoded POSIX path separators
+  in the `piAgentDir` assertion, and a timeout fake that relied on an unref'ed
+  `AbortSignal.timeout` timer (event loop could drain before it fired).
+  105/105 green on Windows.
+
 ## Privacy
+
 
 No telemetry. The API key is read locally and used only for requests to the
 plan's own monitor endpoints (`open.bigmodel.cn` / `api.z.ai`); nothing else
