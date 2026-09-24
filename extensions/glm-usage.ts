@@ -540,7 +540,6 @@ const identityTheme: FooterTheme = { fg: (_role, text) => text };
 
 const FOOTER_LABELS: Record<number, string> = { 3: "5h", 6: "W", 5: "M" };
 const FOOTER_ORDER = [3, 6, 5];
-const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"] as const;
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] as const;
 
 export interface FooterTheme {
@@ -567,7 +566,7 @@ export function formatReset(resetMs: number | undefined, now: number): string {
 	if (diff < 7 * 24 * HOUR_MS) {
 		const hh = String(at.getHours()).padStart(2, "0");
 		const mm = String(at.getMinutes()).padStart(2, "0");
-		return `${WEEKDAYS[at.getDay()]} ${hh}:${mm}`;
+		return `${MONTHS[at.getMonth()]}${at.getDate()} ${hh}:${mm}`;
 	}
 	return `${MONTHS[at.getMonth()]}${String(at.getDate()).padStart(2, "0")}`;
 }

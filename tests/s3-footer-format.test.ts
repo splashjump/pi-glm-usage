@@ -63,13 +63,10 @@ test("footer: color roles by threshold (<50 success, [50,80) warning, >=80 error
 	assert.ok(r.includes("error(████████)"));
 });
 
-test("formatReset: relative under 24h, weekday+time within 7d, short date beyond", () => {
+test("formatReset: relative under 24h, date+time within 7d, short date beyond", () => {
 	assert.equal(formatReset(NOW + 100 * 60 * 1000, NOW), "1h 40m");
 	assert.equal(formatReset(NOW + 5 * 60 * 1000, NOW), "5m");
-	// 2026-08-29 05:00Z → local weekday label of that instant; deterministic via fixed offset env not assumed:
-	const d = new Date(NOW + 2 * 24 * HOUR + HOUR);
-	const expectDay = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][d.getDay()];
-	assert.ok(formatReset(NOW + 2 * 24 * HOUR + HOUR, NOW).startsWith(expectDay), formatReset(NOW + 2 * 24 * HOUR + HOUR, NOW));
+	assert.match(formatReset(NOW + 2 * 24 * HOUR + HOUR, NOW), /^[A-Z][a-z]{2}\d{1,2} \d{2}:\d{2}$/);
 	assert.match(formatReset(NOW + 12 * 24 * HOUR, NOW), /^[A-Z][a-z]{2}\d{1,2}$/);
 });
 
